@@ -1,0 +1,164 @@
+---
+title: "RR project: Best Books By Century"
+author: "Marian Nehrebecki, Aleksander Partyga, Magdalena Sobala"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+params:
+  centries: 
+    label: "Best Books By Century"
+    value: 4
+    input: select
+    min: 4
+    max: 21
+    step: 1
+    sep: ""
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+library(kableExtra) #common complex tables and manipulate table styles
+library(dplyr)
+library(ggtext)
+
+
+
+knitr::opts_chunk$set(echo = FALSE)
+#knitr::opts_knit$set(base.dir = "Plots")
+
+centries_data=paste0('data/centries_', params$centries, '.RData')
+load(centries_data)
+
+centries_data$average_rating = centries_data$`average rating`
+centries_data$number=centries_data$`...1`
+str(centries_data)
+head(centries_data,1)
+tail(centries_data,1)
+
+```
+
+# Best Books By Century `r params$centuries` summary in numbers
+
+
+
+***
+
+### Overview
+
+(From the [Goodreads](https://www.goodreads.com)) Goodreads is the world’s largest site for readers and book recommendations. Our mission is to help people find and share books they love. Goodreads launched in January 2007. 
+
+***
+
+
+### A Few Things You Can Do On Goodreads
+
+>See what books your friends are reading.
+>Track the books you're reading, have read, and want to read.
+>Check out your personalized book recommendations. Our recommendation engine analyzes 20 billion data points to give suggestions tailored to your literary tastes.
+>Find out if a book is a good fit for you from our community’s reviews.
+
+
+
+
+### Centries `r params$centries` summary
+
+**Century `r params$centries`** of *Goodreads* consisted of `r nrow(centries_data)` books that have been published by Author/Authors starting with **`r head(centries_data$authors, 1)`** and ending with **`r tail(centries_data$authors, 1)`**. The best book by `r params$centries` century: **`r centries_data[centries_data$votes==max(centries_data$votes), 'titles']`**  by `r centries_data[centries_data$votes==max(centries_data$votes), 'authors']`
+gathered *`r round(max(centries_data$votes), 1)` votes*, *`r round(max(centries_data$scores), 1)` scores* and *`r round(max(centries_data$average_rating), 1)`* average rating. 
+
+The above literature items can be found on the website:
+
+>`r paste0("\"",centries_data[centries_data$votes==max(centries_data$votes), 'website'],"\"")`.
+
+
+***
+
+### Initial Analysis: {.tabset}
+
+#### Score points of the books  by century `r params$centries`
+
+It should be noted how the **scoring** changes for books by **century `r params$centries`** in Figure 1.
+
+```{r rating_plot1, fig.align = 'center'}
+centries_data %>% 
+  ggplot(aes(x = as.numeric(number), y = scores)) +
+  #geom_line(color = 'darkred', size = 1.2) +
+  geom_bar(stat="identity", fill="darkred") +
+  labs(title = 'Figure 1: Score points of the books  by century', x = 'Books number', 
+       y = 'Score points of the books') +
+  theme_minimal() + 
+  theme(axis.title.y = element_markdown()) 
+```
+**Comments:**
+
+* 
+* 
+*
+
+#### Votes of the books  by century `r params$centries`
+
+It should be noted how the **votes** changes for books by **century `r params$centries`** in Figure 2.
+
+```{r rating_plot2, fig.align = 'center'}
+centries_data %>% 
+  ggplot(aes(x = as.numeric(number), y = votes)) +
+  #geom_line(color = 'darkred', size = 1.2) +
+   geom_bar(stat="identity", fill="darkred") +
+  labs(title = 'Figure 2: Votes of the books  by century', x = 'Books number', 
+       y = 'Votes of the books') +
+  theme_minimal() + 
+  theme(axis.title.y = element_markdown()) 
+``` 
+**Comments:**
+
+* 
+* 
+*
+
+#### Average rating of the books  by century `r params$centries`
+
+It should be noted how the **average rating** changes for books by **century `r params$centries`** in Figure 3.
+
+```{r rating_plot3, fig.align = 'center'}
+centries_data %>% 
+  ggplot(aes(x = as.numeric(number), y = average_rating)) +
+  geom_line(color = 'darkred', size = 1.2) +
+  
+  labs(title = 'Figure 3: Average rating of the books  by century', x = 'Books number', 
+       y = 'Average rating of the books') +
+  theme_minimal() + 
+  theme(axis.title.y = element_markdown()) 
+``` 
+**Comments:**
+
+* 
+* 
+*
+
+***
+
+Finally, the books with the above-average rating (see Table 1):
+
+**Table 1.** The books with the above average rating 
+```{r viewers-table1}
+centries_data %>% 
+  filter(average_rating > mean(average_rating)) %>% 
+  select(c(centries, titles, authors, website)) %>% 
+  rename(`Century` = centries,
+         `Title` = titles,
+         `Author` = authors) %>% 
+
+  kbl(row.names = FALSE) %>% 
+  kable_styling(c('hover'), full_width = FALSE)
+```
+
+**Comments:**
+
+* 
+* 
+*
+
+
+### References: 
+
+https://www.goodreads.com
