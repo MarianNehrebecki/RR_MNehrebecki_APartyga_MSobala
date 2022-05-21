@@ -46,17 +46,17 @@ tail(centries_data,1)
 
 ### Overview
 
-(From the [Goodreads](https://www.goodreads.com)) Goodreads is the world’s largest site for readers and book recommendations. Our mission is to help people find and share books they love. Goodreads launched in January 2007. 
+(From the [Goodreads](https://www.goodreads.com)) Goodreads is the world’s largest site for readers and book recommendations. The mission of Goodreads  is to help people find and share books they love. Goodreads launched in January 2007. 
 
 ***
 
 
-### A Few Things You Can Do On Goodreads
+### A Few Things We Can Do On Goodreads
 
->See what books your friends are reading.
->Track the books you're reading, have read, and want to read.
->Check out your personalized book recommendations. Our recommendation engine analyzes 20 billion data points to give suggestions tailored to your literary tastes.
->Find out if a book is a good fit for you from our community’s reviews.
+>* See what books our friends are reading. <br>
+>* Track the books we' re reading, have read, and want to read.<br>
+>* Check out our personalized book recommendations. The recommendation engine analyzes 20 billion data points to give suggestions tailored to our literary tastes. <br>
+>* Find out if a book is a good fit for us from our community’s reviews.
 
 
 
