@@ -21,7 +21,10 @@ library(tidyverse)
 library(kableExtra) #common complex tables and manipulate table styles
 library(dplyr)
 library(ggtext)
-
+library(ggplot2)
+library(tidyverse)
+library(tm)
+library(wordcloud2)
 
 
 knitr::opts_chunk$set(echo = FALSE)
@@ -73,11 +76,18 @@ The above literature items can be found on the website:
 
 ***
 
+
+
+
+
+
 ### Initial Analysis: {.tabset}
 
 #### Score points of the books  by century `r params$centries`
 
 It should be noted how the **scoring** changes for books by **century `r params$centries`** in Figure 1.
+
+
 
 ```{r rating_plot1, fig.align = 'center'}
 centries_data %>% 
@@ -91,9 +101,15 @@ centries_data %>%
 ```
 **Comments:**
 
-* 
-* 
-*
+* The maximum score points of the books by *century `r params$centries`* are equal `r round(max(centries_data$scores), 1)` 
+for the book: **`r centries_data[centries_data$scores==max(centries_data$scores), 'titles']`**.
+
+* The average score points of the books by *century `r params$centries`* are equal `r round(mean(centries_data$scores), 1)`.
+
+* The minimum score points of the books by *century `r params$centries`* are equal `r round(min(centries_data$scores), 1)` 
+for the book: **`r centries_data[centries_data$scores==min(centries_data$scores), 'titles']`**.
+
+
 
 #### Votes of the books  by century `r params$centries`
 
@@ -103,7 +119,7 @@ It should be noted how the **votes** changes for books by **century `r params$ce
 centries_data %>% 
   ggplot(aes(x = as.numeric(number), y = votes)) +
   #geom_line(color = 'darkred', size = 1.2) +
-   geom_bar(stat="identity", fill="darkred") +
+   geom_bar(stat="identity", fill="darkblue") +
   labs(title = 'Figure 2: Votes of the books  by century', x = 'Books number', 
        y = 'Votes of the books') +
   theme_minimal() + 
@@ -111,18 +127,23 @@ centries_data %>%
 ``` 
 **Comments:**
 
-* 
-* 
-*
+* The maximum votes of the books by *century `r params$centries`* are equal `r round(max(centries_data$votes), 1)` 
+for the book: **`r centries_data[centries_data$votes==max(centries_data$votes), 'titles']`**.
+
+* The average votes of the books by *century `r params$centries`* are equal `r round(mean(centries_data$votes), 1)`.
+
+* The minimum votes of the books by *century `r params$centries`* are equal `r round(min(centries_data$votes), 1)`.
 
 #### Average rating of the books  by century `r params$centries`
 
 It should be noted how the **average rating** changes for books by **century `r params$centries`** in Figure 3.
 
+
+
 ```{r rating_plot3, fig.align = 'center'}
 centries_data %>% 
   ggplot(aes(x = as.numeric(number), y = average_rating)) +
-  geom_line(color = 'darkred', size = 1.2) +
+  geom_line(color = 'darkgreen', size = 1.2) +
   
   labs(title = 'Figure 3: Average rating of the books  by century', x = 'Books number', 
        y = 'Average rating of the books') +
@@ -131,9 +152,13 @@ centries_data %>%
 ``` 
 **Comments:**
 
-* 
-* 
-*
+* The maximum average rating of the books by *century `r params$centries`* are equal `r round(max(centries_data$average_rating), 1)` 
+for the book: **`r centries_data[centries_data$average_rating==max(centries_data$average_rating), 'titles']`**.
+
+* The average rating of the books by *century `r params$centries`* are equal `r round(mean(centries_data$average_rating), 1)`.
+
+* The minimum average rating of the books by *century `r params$centries`* are equal `r round(min(centries_data$average_rating), 1)` 
+for the book: **`r centries_data[centries_data$average_rating==min(centries_data$average_rating), 'titles']`**.
 
 ***
 
@@ -141,6 +166,10 @@ Finally, the books with the above-average rating (see Table 1):
 
 **Table 1.** The books with the above average rating 
 ```{r viewers-table1}
+
+centries_data1 = centries_data[centries_data$average_rating > mean(centries_data$average_rating),]
+
+
 centries_data %>% 
   filter(average_rating > mean(average_rating)) %>% 
   select(c(centries, titles, authors, website)) %>% 
@@ -154,9 +183,10 @@ centries_data %>%
 
 **Comments:**
 
-* 
-* 
-*
+* The total number of the books by *century `r params$centries`* are equal: **`r nrow(centries_data)`**.
+* The number of books with the above average rating by *century `r params$centries`* are equal: **`r nrow(centries_data1)`**.
+
+
 
 
 ### References: 
