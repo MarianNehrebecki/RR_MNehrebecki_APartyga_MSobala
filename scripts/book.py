@@ -129,7 +129,10 @@ books['average rating'] = books['ratings'].apply(lambda x: x.split()[0])
 books['average rating'] = books['average rating'].str.replace('really', '')
 books['average rating'] = books['average rating'].str.replace('it', '')
 books['average rating'] = books['average rating'].str.replace('liked', '')
+
+books['times rated'] = books['ratings'].apply(lambda x: x.split()[4])
 books['average rating'] = pd.to_numeric(books['average rating'], errors='coerce')
+books['times rated'] = pd.to_numeric(books['times rated'], errors='coerce', downcast = 'integer')
 
 books.drop("ratings", axis=1, inplace=True)
 books['average rating'].replace('', np.nan, inplace=True)
