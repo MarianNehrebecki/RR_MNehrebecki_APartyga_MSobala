@@ -1,31 +1,28 @@
-# Step 1: Install packages
+# Below script allows to scrap data from goodreads.com
 
+# Step 1: Install necessary packages
 import selenium.common.exceptions
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 from selenium.common.exceptions import NoSuchElementException
-
 from selenium.webdriver.common.by import By
 from time import sleep, time
-
 import pandas as pd
 import numpy as np
-
 import matplotlib.pyplot as plt
 
 # Step 2: Start with Time measurement for scraping data
 start = time()
 
 # Step 3: Analysis of the URL
-
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 link = "https://www.goodreads.com/list/best_of_century/21st?id=7.Best_Books_of_the_21st_Century&page="
 driver.get(link)
 
 pages = np.arange(1, 2)
 
-# Step 4:  Finding and displaying links for Best books by century
+# Step 4:  Finding and displaying links for "Best books by century"
 
 # Generate a list of links for each century
 centries_names = ['21st'] + [f'{n}th' for n in range(20, 3, -1)]  # 21st, 20th, 19th, ..., 4th
@@ -63,7 +60,7 @@ sleep(0.5)
 # Step 5:  Scraping multiple pages
 print("Web scraping has begun")
 
-# Step 6: Preparation of the storage of the scraping data
+# Step 6: Preparation of the storage of the scraped data
 element_list = []
 skipped = 0
 allowed_authors = ["(U.S.)", "(Fils)", "Juan Ruiz (Arcipreste de Hita)"] + [f"{n})" for n in range(0, 10)]
@@ -74,7 +71,7 @@ for n, centry_with_link in enumerate(centries_with_links, start=1):
     sleep(0.1)
 
 
-# Step 7: Scraping of the selected information
+# Step 7: Scraping of selected information
     titles = [1]  # just for exception
     try:
         titles = driver.find_elements(by=By.CLASS_NAME, value="bookTitle")
@@ -112,51 +109,46 @@ print(f"Skipeed books: {skipped}, appended: {len(element_list)}")
 stop = time()
 print(stop-start)
 
-# Step 9: Creating dataframes from scraping data
+# Step 9: Creating dataframes from scraped data
 books = pd.DataFrame(element_list)
+
 # We introduce the name of the column
 books.columns = ['centries', 'titles', 'authors', 'ratings', 'scores', 'votes', 'website']
+
 # Display our dataframe
 print(books)
 
-# Step 9: Cleaning data using pandas
-
+# Step 10: Cleaning data using pandas
 books['votes'] = books['votes'].str.replace(',', '')
 books['votes'] = books['votes'].str.extract(r'(\d+)').astype(int)
-
 books['scores'] = books['scores'].str.replace(',', '')
 books['scores'] = books['scores'].str.extract(r'(\d+)').astype(int)
-
 books['ratings'] = books['ratings'].str.replace('really liked it ', '')
 books['ratings'] = books['ratings'].str.replace(',', '')
-
 books['average rating'] = books['ratings'].apply(lambda x: x.split()[0])
 books['average rating'] = books['average rating'].str.replace('really', '')
 books['average rating'] = books['average rating'].str.replace('it', '')
 books['average rating'] = books['average rating'].str.replace('liked', '')
-
 books['average rating'] = pd.to_numeric(books['average rating'], errors='coerce')
 
 books.drop("ratings", axis=1, inplace=True)
 books['average rating'].replace('', np.nan, inplace=True)
 books.dropna(subset=['average rating'], inplace=True)
 
-# Step 10: Display the data types of the variables
+# Display the data types of the variables
 print(books.dtypes)
 
 # Step 11: Verifying missing data
 print(books.isnull().sum())
 
-# Step 12: Save the scraping data into a CSV file
+# Step 12: Save the scraped data into a CSV file
 books.to_csv("books_selenium.csv")
 
-
-# Step 13: Replace the zero values for the variables in the DataFrame to NaN.
+# Step 13: Replace the zero values with NaN
 books.replace(str(0), np.nan, inplace=True)
 books.replace(0, np.nan, inplace=True)
 
-# Step 14: Counting the Number of NaNs for the variables in the DataFrame
-
+# Step 14: Counting the mumber of NaNs
 count_nan = len(books) - books.count()
 print(count_nan)
 
@@ -164,19 +156,15 @@ sleep(3)
 driver.close()
 
 # Step 15: Some basic statistics for the variables  in the DataFrame
-
 books.describe()
 
-
 # Step 16: Plotting the distributions of the variables: votes, scores, average rating
-
 fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(16, 4))
 ax1, ax2, ax3 = fig.axes
 ax1.hist(books['votes'])
 ax1.set_title('votes')
 ax2.hist(books['scores'])
 ax2.set_title('scores')
-
 ax3.hist(books['average rating'])
 ax3.set_title('average rating')
 
