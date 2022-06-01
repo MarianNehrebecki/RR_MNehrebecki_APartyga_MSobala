@@ -142,7 +142,7 @@ print(books.dtypes)
 print(books.isnull().sum())
 
 # Step 12: Save the scraped data into a CSV file
-books.to_csv("books.csv")
+books.to_csv("book.csv")
 
 # Step 13: Replace the zero values with NaN
 books.replace(str(0), np.nan, inplace=True)
