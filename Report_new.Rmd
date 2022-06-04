@@ -38,9 +38,16 @@ centries_data$number=centries_data$`...1`
 str(centries_data)
 head(centries_data,1)
 tail(centries_data,1)
-
+colnames(centries_data)<-c("...1","centries","titles","authors","scores","votes","website","average rating","times.rated","average_rating","number")
 ```
-
+```{r, include=F, results=F}
+library(stringr)
+titles<-centries_data$titles
+#ifelse(nchar(titles) > 25, paste0(strtrim(titles, 20), "(...)"), titles)
+#sapply(titles, paste, "(...)", sep=" ")
+titles<-str_trunc(titles,33)
+centries_data$titles_new<-titles
+```
 
 ### Overview
 
@@ -62,78 +69,76 @@ The users can rate their favourite books, create lists and share their opinion w
 
 ***
 
-# Summary of the Best Books by Century - Century `r params$centuries`
+# Summary of the Best Books by Century - Century `r params$centries`
 
 *Goodreads* provides its users with information on `r nrow(centries_data)` books from **Century `r params$centries`** that have been published by Author/Authors from **`r head(centries_data$authors, 1)`** to **`r tail(centries_data$authors, 1)`**.
 
 The best book in Century `r params$centries` was **`r centries_data[centries_data$votes==max(centries_data$votes), 'titles']`**  by `r centries_data[centries_data$votes==max(centries_data$votes), 'authors']` which gathered *`r round(max(centries_data$votes), 1)` votes*, *`r round(max(centries_data$scores), 1)` scores* and an average rating of *`r round(max(centries_data$average_rating), 1)`*. 
 
 The book can be found under the following link:
->`r paste0("\"",centries_data[centries_data$votes==max(centries_data$votes), 'website'],"\"")`
+`r paste0("\"",centries_data[centries_data$votes==max(centries_data$votes), 'website'],"\"")`
 
 
 ***
 
 
-### Visualisations: {.tabset}
-
-#### Books with the highest scores in Century `r params$centries`
-
-```{r plot1, fig.align = 'center'}
-sys.source("Plots_source.R", envir = knitr::knit_global())
-plot1
-```
-
-
-**Comments:** ##not updated
-
-* The maximum score points of the books by *century `r params$centries`* are equal `r round(max(centries_data$scores), 1)` 
-for the book: **`r centries_data[centries_data$scores==max(centries_data$scores), 'titles']`**.
-
-* The average score points of the books by *century `r params$centries`* are equal `r round(mean(centries_data$scores), 1)`.
-
-* The minimum score points of the books by *century `r params$centries`* are equal `r round(min(centries_data$scores), 1)` 
-for the book: **`r centries_data[centries_data$scores==min(centries_data$scores), 'titles']`**.
+## Visualisations: {.tabset}
 
 
 
-#### Books that were rated the most times in Century `r params$centries`
+### Books that were rated the most times in Century `r params$centries`
 
 ```{r plot2, fig.align = 'center'}
 sys.source("Plots_source.R", envir = knitr::knit_global())
-plot2
+plot2+ theme_minimal()
 ``` 
-**Comments:** ## not updated
+**Summary:** 
 
-* The maximum votes of the books by *century `r params$centries`* are equal `r round(max(centries_data$votes), 1)` 
+* The top rated book in Century `r params$centries` is `r round(max(centries_data$votes), 1)` 
 for the book: **`r centries_data[centries_data$votes==max(centries_data$votes), 'titles']`**.
 
-* The average votes of the books by *century `r params$centries`* are equal `r round(mean(centries_data$votes), 1)`.
+* The average votes of the books by century `r params$centries` are equal `r round(mean(centries_data$votes), 1)`.
 
-* The minimum votes of the books by *century `r params$centries`* are equal `r round(min(centries_data$votes), 1)`.
+* The minimum votes of the books by century `r params$centries` are equal `r round(min(centries_data$votes), 1)`.
 
-#### Most prolific authors in Century `r params$centries`
+### Books with the highest ratings in Century `r params$centries`
+
+```{r plot1, fig.align = 'center'}
+sys.source("Plots_source.R", envir = knitr::knit_global())
+plot1+ theme_minimal()
+```
+
+**Summary:**
+
+* The maximum average rating for a book in Century `r params$centries` is `r round(max(centries_data$average_rating), 1)` for the book: **`r centries_data[centries_data$average_rating==max(centries_data$average_rating), 'titles']`**.
+
+* The average rating of all books in Century `r params$centries` is `r round(mean(centries_data$average_rating), 1)`.
+
+* The minimum average rating for a book in Century `r params$centries` is `r round(min(centries_data$average_rating), 1)` for the book: **`r centries_data[centries_data$average_rating==min(centries_data$average_rating), 'titles']`**.
+
+
+### Most prolific authors in Century `r params$centries`
 
 ```{r plot3, fig.align = 'center'}
 sys.source("Plots_source.R", envir = knitr::knit_global())
-plot3
+plot3+ theme_minimal()
 ``` 
-**Comments:** ##not updated
+**Summary:**
 
-* The maximum average rating of the books by *century `r params$centries`* are equal `r round(max(centries_data$average_rating), 1)` 
-for the book: **`r centries_data[centries_data$average_rating==max(centries_data$average_rating), 'titles']`**.
+* The most prolific author in Century `r params$centries` is ##uzupelnic.
 
-* The average rating of the books by *century `r params$centries`* are equal `r round(mean(centries_data$average_rating), 1)`.
-
-* The minimum average rating of the books by *century `r params$centries`* are equal `r round(min(centries_data$average_rating), 1)` 
-for the book: **`r centries_data[centries_data$average_rating==min(centries_data$average_rating), 'titles']`**.
+* The least prolific author in Century `r params$centries` is ##uzupelnic
 
 ***
 
-Finally, the books with the above-average rating (see Table 1):
+## List of books with above average rating in Century `r params$centries`
+```{r viewers}
 
-**Table 1.** The books with the above average rating 
-```{r viewers-table1}
+centries_data1 = centries_data[centries_data$average_rating > mean(centries_data$average_rating),]
+```
+The number of books with the above average rating in Century `r params$centries` is **`r nrow(centries_data1)`** out of all **`r nrow(centries_data)`** Century `r params$centries` books.
+
+```{r viewers-table}
 
 centries_data1 = centries_data[centries_data$average_rating > mean(centries_data$average_rating),]
 
@@ -148,14 +153,6 @@ centries_data %>%
   kbl(row.names = FALSE) %>% 
   kable_styling(c('hover'), full_width = FALSE)
 ```
-
-**Comments:**
-
-* The total number of the books by *century `r params$centries`* are equal: **`r nrow(centries_data)`**.
-* The number of books with the above average rating by *century `r params$centries`* are equal: **`r nrow(centries_data1)`**.
-
-
-
 
 ### References: 
 
