@@ -47,6 +47,7 @@ titles<-centries_data$titles
 #sapply(titles, paste, "(...)", sep=" ")
 titles<-str_trunc(titles,33)
 centries_data$titles_new<-titles
+centries_data$books_written <- as.numeric(ave(centries_data$authors, centries_data$authors, FUN = length))
 ```
 
 ### Overview
@@ -94,14 +95,14 @@ plot2+ theme_minimal()
 ``` 
 **Summary:** 
 
-* The top rated book in Century `r params$centries` is `r round(max(centries_data$votes), 1)` 
-for the book: **`r centries_data[centries_data$votes==max(centries_data$votes), 'titles']`**.
+* The top rated book in Century `r params$centries` is `r round(max(centries_data$times.rated), 1)` 
+for the book: **`r centries_data[centries_data$times.rated==max(centries_data$times.rated), 'titles']`**.
 
-* The average votes of the books by century `r params$centries` are equal `r round(mean(centries_data$votes), 1)`.
+* The average rated book of the books by century `r params$centries` are equal `r round(mean(centries_data$times.rated), 1)`.
 
-* The minimum votes of the books by century `r params$centries` are equal `r round(min(centries_data$votes), 1)`.
+* The minimum rated book of the books by century `r params$centries` are equal `r round(min(centries_data$times.rated), 1)`.
 
-### Books with the highest ratings in Century `r params$centries`
+### Books with the highest scores in Century `r params$centries`
 
 ```{r plot1, fig.align = 'center'}
 sys.source("Plots_source.R", envir = knitr::knit_global())
@@ -110,11 +111,11 @@ plot1+ theme_minimal()
 
 **Summary:**
 
-* The maximum average rating for a book in Century `r params$centries` is `r round(max(centries_data$average_rating), 1)` for the book: **`r centries_data[centries_data$average_rating==max(centries_data$average_rating), 'titles']`**.
+* The maximum score for a book in Century `r params$centries` is `r round(max(centries_data$scores), 1)` for the book: **`r centries_data[centries_data$scores==max(centries_data$scores), 'titles']`**.
 
-* The average rating of all books in Century `r params$centries` is `r round(mean(centries_data$average_rating), 1)`.
+* The average score of all books in Century `r params$centries` is `r round(mean(centries_data$scores), 1)`.
 
-* The minimum average rating for a book in Century `r params$centries` is `r round(min(centries_data$average_rating), 1)` for the book: **`r centries_data[centries_data$average_rating==min(centries_data$average_rating), 'titles']`**.
+* The minimum score for a book in Century `r params$centries` is `r round(min(centries_data$scores), 1)` for the book: **`r centries_data[centries_data$scores==min(centries_data$scores), 'titles']`**.
 
 
 ### Most prolific authors in Century `r params$centries`
@@ -125,9 +126,9 @@ plot3+ theme_minimal()
 ``` 
 **Summary:**
 
-* The most prolific author in Century `r params$centries` is ##uzupelnic.
+* The most prolific author in Century `r params$centries` is ###r centries_data[centries_data$books_written==max(centries_data$books_written), 'authors']`**.
 
-* The least prolific author in Century `r params$centries` is ##uzupelnic
+* The least prolific author in Century `r params$centries` is ###r centries_data[centries_data$books_written==min(centries_data$books_written), 'authors']`**.
 
 ***
 
