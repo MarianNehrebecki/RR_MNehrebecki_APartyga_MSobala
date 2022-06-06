@@ -1,0 +1,111 @@
+---
+title: "Best books of all times"
+author: "Marian Nehrebecki, Aleksander Partyga, Magdalena Sobala"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  prettydoc::html_pretty:
+    theme: tactile
+params:
+  centries: 
+    label: "Best books of all times"
+    value: 4
+    input: select
+    min: 4
+    max: 21
+    step: 1
+    sep: ""
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+library(kableExtra) #common complex tables and manipulate table styles
+library(dplyr)
+library(ggtext)
+library(ggplot2)
+library(tidyverse)
+library(tm)
+library(wordcloud2)
+
+knitr::opts_chunk$set(echo = FALSE, message = FALSE)
+options(scipen = 999)
+```
+
+
+
+```{r, include=F, results=F}
+books <- read.csv('data/book.csv')
+books$titles<-str_trunc(books$titles,33)
+head(books)
+```
+
+### Overview
+
+(From the [Goodreads](https://www.goodreads.com)) Goodreads.com is the world’s largest site for readers and book recommendations. The mission of Goodreads  is to help people find and share books they love.
+
+The users can rate their favourite books, create lists and share their opinion with their friends. The website also provides extensive information on books from all genres and centuries; it also provides the users with rankings, available by different parameters. The rankings that are of interst to us, are the rating by the century. Below you can find a short summary of each century's best books.
+
+***
+
+
+### A few things we can do on Goodreads
+
+>* See what books our friends are reading. <br>
+>* Track the books we' re reading, have read, and want to read.<br>
+>* Check out our personalized book recommendations. The recommendation engine analyzes 20 billion data points to give suggestions tailored to our literary tastes. <br>
+>* Find out if a book is a good fit for us from our community’s reviews.
+
+
+
+```{r, include=F, results=F}
+# Title of the best book
+bb_title <- books$titles[books$scores==max(books$scores)]
+```
+
+***
+
+## Summary of the best books of all time 
+
+In total, we gathered available data from [Best Books By Century](https://www.goodreads.com/list/show/7), namely `r nrow(books)` unique book
+titles along with their:
+
+ * author
+ * total score (which is based on number of votes and and how highly those voters ranked the book)
+ * URL link
+ * average rating
+ * number of times rated
+
+
+&nbsp;
+
+## Visualisations: {.tabset}
+
+
+
+### Books that were rated the most times 
+
+```{r plot2, fig.align = 'center'}
+sys.source("Plots.R", envir = knitr::knit_global())
+plot2
+``` 
+
+The book that was rated the most times is  "**`r books$titles[books$times.rated==max(books$times.rated)]`**" written by **`r books$authors[books$times.rated==max(books$times.rated)]`** which was rated **`r max(books$times.rated)`** number of times. 
+
+### Books with the highest total scores
+
+```{r plot1, fig.align = 'center'}
+sys.source("Plots.R", envir = knitr::knit_global())
+plot1
+```
+
+The top rated book of all time is "**`r books$titles[books$scores==max(books$scores)]`**"  which was rated **`r books$times.rated[books$titles == bb_title]`** number of times and received an average rating of **`r books$average.rating[books$titles == bb_title]`**. 
+
+
+### Most prolific authors
+
+```{r plot3, fig.align = 'center'}
+sys.source("Plots.R", envir = knitr::knit_global())
+plot3
+```
+
+
+**`r unique(books$author[books$books_written == max(books$books_written)])`** is the author who has written the most books  (**`r max(books$books_written)`**) that were present in the Best Books by Century on Goodreads.

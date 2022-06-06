@@ -24,6 +24,7 @@ plot1 <- books %>%
   ggplot(., aes(x = titles, y = scores)) +
   geom_bar(stat = 'identity') +
   #scale_fill_manual(values =  c('#bebfe6', '#73824a')) + 
+  scale_y_continuous(labels = label_number(suffix = " K", scale = 1e-3)) +
   coord_flip() +
   labs(y = 'Score',x="",title="", caption = "A book's total score is based on multiple factors, 
        including the number of people who have voted for it and how highly those voters ranked the book.") +
@@ -40,7 +41,7 @@ plot2<-books %>%
   mutate(titles = fct_reorder(titles_new, times.rated)) %>%
   ggplot(., aes(x = titles, y = times.rated)) +
   geom_bar(stat = 'identity') +
-  scale_fill_manual(values =  c('#ba8b32', '#bebfe6', '#73824a')) + 
+  # scale_fill_manual(values =  c('#ba8b32', '#bebfe6', '#73824a')) + 
   coord_flip() +
   labs(y = 'Number of times rated',x="",title="") +
   theme(plot.title = element_text(hjust = .5, margin = margin(b = 20)),
@@ -65,7 +66,7 @@ plot3<-books %>%
   mutate(authors = fct_reorder(authors, books_written)) %>%
   ggplot(., aes(x = authors, y = books_written)) +
   geom_bar(stat = 'identity') +
-  scale_fill_manual(values =  c('#687796', '#ba8b32', '#bebfe6', '#73824a')) + 
+  # scale_fill_manual(values =  c('#687796', '#ba8b32', '#bebfe6', '#73824a')) + 
   coord_flip() +
   labs(y = 'Number of books written',x="",title="") +
   theme(plot.title = element_text(hjust = .5, margin = margin(b = 20)),
