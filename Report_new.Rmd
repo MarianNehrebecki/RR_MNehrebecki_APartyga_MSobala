@@ -126,9 +126,9 @@ plot3+ theme_minimal()
 ``` 
 **Summary:**
 
-* The most prolific author in Century `r params$centries` is ###r centries_data[centries_data$books_written==max(centries_data$books_written), 'authors']`**.
+* The most prolific author in Century `r params$centries` is **`r unique centries_data[centries_data$books_written==max(centries_data$books_written), 'authors']`**.
 
-* The least prolific author in Century `r params$centries` is ###r centries_data[centries_data$books_written==min(centries_data$books_written), 'authors']`**.
+* The least prolific author in Century `r params$centries` is **`r unique centries_data[centries_data$books_written==min(centries_data$books_written), 'authors']`**.
 
 ***
 
