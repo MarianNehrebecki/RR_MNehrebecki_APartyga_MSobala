@@ -14,15 +14,13 @@ options(scipen = 10000)
 books<-centries_data
 
 ### 1. Books with the highest scores across centuries 
-###PROSZE ZMIENIC NA RATINGS -> SCORE TO JEST KOMBINACJA RATINGU I LICZBY VOTES 
-####BEZ SENSU POKAZYWAC TO I LICZBE VOTES, LPIEJ DAC LICZBE VOTES I RATING
 
 plot1 <- books %>%
   arrange(desc(scores)) %>%
   head(20) %>%
   mutate(titles = fct_reorder(titles_new, scores)) %>%
   ggplot(., aes(x = titles, y = scores)) +
-  geom_bar(stat = 'identity') +
+  geom_bar(stat = 'identity', fill='darkred') +
   #scale_fill_manual(values =  c('#bebfe6', '#73824a')) + 
   scale_y_continuous(labels = label_number(suffix = " K", scale = 1e-3)) +
   coord_flip() +
@@ -40,7 +38,7 @@ plot2<-books %>%
   head(20) %>%
   mutate(titles = fct_reorder(titles_new, times.rated)) %>%
   ggplot(., aes(x = titles, y = times.rated)) +
-  geom_bar(stat = 'identity') +
+  geom_bar(stat = 'identity', fill='darkred') +
   # scale_fill_manual(values =  c('#ba8b32', '#bebfe6', '#73824a')) + 
   coord_flip() +
   labs(y = 'Number of times rated',x="",title="") +
@@ -65,7 +63,7 @@ plot3<-books %>%
   head(20) %>%
   mutate(authors = fct_reorder(authors, books_written)) %>%
   ggplot(., aes(x = authors, y = books_written)) +
-  geom_bar(stat = 'identity') +
+  geom_bar(stat = 'identity', fill='darkred') +
   # scale_fill_manual(values =  c('#687796', '#ba8b32', '#bebfe6', '#73824a')) + 
   coord_flip() +
   labs(y = 'Number of books written',x="",title="") +

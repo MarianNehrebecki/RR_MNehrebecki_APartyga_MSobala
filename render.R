@@ -1,6 +1,6 @@
 # render
 
-setwd("/Users/nehrebeckiwp.pl/Desktop/RR/RR_MNehrebecki_APartyga_MSobala")
+setwd("/Users/magda/Desktop/uni/Masters/IV semester/RR/RRproject/RR_MNehrebecki_APartyga_MSobala")
 
 # We need to load the necessary packages if we're operating through an R script.
 
@@ -11,8 +11,8 @@ library(rmarkdown)
 centries=21
 for(i in 4:centries)
 {
-  rmarkdown::render('project.Rmd',
-                    output_file = paste0('project.Rmd_centries_', i, '.html'),   
+  rmarkdown::render('Report_new.Rmd',
+                    output_file = paste0('Report_Century_', i, '.html'),   
                     params = list(centries = i))
 }
 

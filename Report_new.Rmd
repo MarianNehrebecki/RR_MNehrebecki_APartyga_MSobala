@@ -1,14 +1,14 @@
 ---
-title: "Best Books by Century"
+title: "Best books by century"
 author: "Marian Nehrebecki, Aleksander Partyga, Magdalena Sobala"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   prettydoc::html_pretty:
-    theme: cayman
+    theme: tactile
 params:
   centries: 
-    label: "Best Books By Century"
-    value: 4
+    label: "Best books by century"
+    value: 6
     input: select
     min: 4
     max: 21
@@ -25,6 +25,7 @@ library(ggplot2)
 library(tidyverse)
 library(tm)
 library(wordcloud2)
+library(scales)
 
 
 knitr::opts_chunk$set(echo = FALSE)
@@ -49,20 +50,21 @@ titles<-str_trunc(titles,33)
 centries_data$titles_new<-titles
 centries_data$books_written <- as.numeric(ave(centries_data$authors, centries_data$authors, FUN = length))
 ```
+## **Century `r params$centries`**
 
 ### Overview
 
-(From the [Goodreads](https://www.goodreads.com)) Goodreads.com is the world’s largest site for readers and book recommendations. The mission of Goodreads  is to help people find and share books they love.
+(From the [Goodreads](https://www.goodreads.com)) Goodreads.com is the world’s largest site for readers and book recommendations. The mission of Goodreads is to help people find and share books they love.
 
-The users can rate their favourite books, create lists and share their opinion with their friends. The website also provides extensive information on books from all genres and centuries; it also provides the users with rankings, available by different parameters. The rankings that are of interst to us, are the rating by the century. Below you can find a short summary of each century's best books.
+The users can rate their favourite books, create lists and share their opinions with their friends. The website also provides extensive information on books from all genres and centuries; it also provides the users with rankings, available by different parameters. The rankings that are of interest to us, are the rating by the century. Below you can find a short summary of each century's best books.
 
 ***
 
 
-### A Few Things We Can Do On Goodreads
+### A few things we can do on Goodreads
 
 >* See what books our friends are reading. <br>
->* Track the books we' re reading, have read, and want to read.<br>
+>* Track the books we are reading, have read, and want to read.<br>
 >* Check out our personalized book recommendations. The recommendation engine analyzes 20 billion data points to give suggestions tailored to our literary tastes. <br>
 >* Find out if a book is a good fit for us from our community’s reviews.
 
@@ -70,11 +72,11 @@ The users can rate their favourite books, create lists and share their opinion w
 
 ***
 
-# Summary of the Best Books by Century - Century `r params$centries`
+# Summary of the Best books in Century `r params$centries`
 
 *Goodreads* provides its users with information on `r nrow(centries_data)` books from **Century `r params$centries`** that have been published by Author/Authors from **`r head(centries_data$authors, 1)`** to **`r tail(centries_data$authors, 1)`**.
 
-The best book in Century `r params$centries` was **`r centries_data[centries_data$votes==max(centries_data$votes), 'titles']`**  by `r centries_data[centries_data$votes==max(centries_data$votes), 'authors']` which gathered *`r round(max(centries_data$votes), 1)` votes*, *`r round(max(centries_data$scores), 1)` scores* and an average rating of *`r round(max(centries_data$average_rating), 1)`*. 
+The best book in Century `r params$centries` was **`r centries_data$titles[centries_data$votes==max(centries_data$votes)]`**  by **`r centries_data$authors[centries_data$votes==max(centries_data$votes)]`** which gathered *`r round(max(centries_data$votes), 1)` votes*, *`r round(max(centries_data$scores), 1)` scores* and an average rating of *`r round(max(centries_data$average_rating), 1)`*. 
 
 The book can be found under the following link:
 `r paste0("\"",centries_data[centries_data$votes==max(centries_data$votes), 'website'],"\"")`
@@ -89,46 +91,51 @@ The book can be found under the following link:
 
 ### Books that were rated the most times in Century `r params$centries`
 
-```{r plot2, fig.align = 'center'}
+```{r plot2, fig.align = 'center',fig.width=8, fig.height=6}
 sys.source("Plots_source.R", envir = knitr::knit_global())
-plot2+ theme_minimal()
+plot2+ theme_minimal()+
+  theme(
+    plot.background = element_rect(colour = "black", size=1)
+  )
 ``` 
 **Summary:** 
 
-* The top rated book in Century `r params$centries` is `r round(max(centries_data$times.rated), 1)` 
-for the book: **`r centries_data[centries_data$times.rated==max(centries_data$times.rated), 'titles']`**.
+* The book that was rated the most in Century `r params$centries` is **`r centries_data$titles[centries_data$times.rated==max(centries_data$times.rated)]`**, and the number of votes is **`r round(max(centries_data$times.rated), 1)`**.
 
-* The average rated book of the books by century `r params$centries` are equal `r round(mean(centries_data$times.rated), 1)`.
-
-* The minimum rated book of the books by century `r params$centries` are equal `r round(min(centries_data$times.rated), 1)`.
+* The average number of voted for a book from Century `r params$centries` is equal **`r round(mean(centries_data$times.rated), 1)`**.
 
 ### Books with the highest scores in Century `r params$centries`
 
-```{r plot1, fig.align = 'center'}
+```{r plot1, fig.align = 'center',fig.width=8, fig.height=6}
 sys.source("Plots_source.R", envir = knitr::knit_global())
-plot1+ theme_minimal()
+plot1+ theme_minimal()+
+  theme(
+    plot.background = element_rect(colour = "black", size=1)
+  )
 ```
 
 **Summary:**
 
-* The maximum score for a book in Century `r params$centries` is `r round(max(centries_data$scores), 1)` for the book: **`r centries_data[centries_data$scores==max(centries_data$scores), 'titles']`**.
+* The maximum score for a book in Century `r params$centries` is **`r round(max(centries_data$scores), 1)`** for the book: **`r centries_data$titles[centries_data$scores==max(centries_data$scores)]`**.
 
-* The average score of all books in Century `r params$centries` is `r round(mean(centries_data$scores), 1)`.
+* The average score of all books in Century `r params$centries` is **`r round(mean(centries_data$scores), 1)`**.
 
-* The minimum score for a book in Century `r params$centries` is `r round(min(centries_data$scores), 1)` for the book: **`r centries_data[centries_data$scores==min(centries_data$scores), 'titles']`**.
+* The minimum score for a book in Century `r params$centries` is **`r round(min(centries_data$scores), 1)`** for the book: **`r centries_data$titles[centries_data$scores==min(centries_data$scores)]`**.
 
 
 ### Most prolific authors in Century `r params$centries`
 
-```{r plot3, fig.align = 'center'}
+```{r plot3, fig.align = 'center',fig.width=8, fig.height=6}
 sys.source("Plots_source.R", envir = knitr::knit_global())
-plot3+ theme_minimal()
+plot3+ theme_minimal()+
+  theme(
+    plot.background = element_rect(colour = "black", size=1)
+  )
 ``` 
 **Summary:**
 
-* The most prolific author in Century `r params$centries` is **`r unique centries_data[centries_data$books_written==max(centries_data$books_written), 'authors']`**.
+* The most prolific author in Century `r params$centries` is **`r unique( centries_data$authors[centries_data$books_written==max(centries_data$books_written)])`**.
 
-* The least prolific author in Century `r params$centries` is **`r unique centries_data[centries_data$books_written==min(centries_data$books_written), 'authors']`**.
 
 ***
 
@@ -138,11 +145,9 @@ plot3+ theme_minimal()
 centries_data1 = centries_data[centries_data$average_rating > mean(centries_data$average_rating),]
 ```
 The number of books with the above average rating in Century `r params$centries` is **`r nrow(centries_data1)`** out of all **`r nrow(centries_data)`** Century `r params$centries` books.
+The below table displays the top 10 results.
 
-```{r viewers-table}
-
-centries_data1 = centries_data[centries_data$average_rating > mean(centries_data$average_rating),]
-
+```{r viewers-table, echo=F}
 
 centries_data %>% 
   filter(average_rating > mean(average_rating)) %>% 
@@ -150,9 +155,12 @@ centries_data %>%
   rename(`Century` = centries,
          `Title` = titles,
          `Author` = authors) %>% 
+  top_n(10)%>%
 
   kbl(row.names = FALSE) %>% 
   kable_styling(c('hover'), full_width = FALSE)
+
+
 ```
 
 ### References: 
